@@ -8,11 +8,19 @@ WIDTH, HEIGHT = 1920, 1080
 class Player(pygame.sprite.Sprite):
     def __init__(self, x=960, y=540, sprite='Graphics/player_stand.png'):
         super().__init__()
-        self.image = pygame.image.load(sprite).convert_alpha()
+        self.standing_image = pygame.image.load(sprite).convert_alpha()
+        self.image = self.standing_image
         self.rect = self.image.get_rect(center=(x, y))
         self.speed = PLAYER_SPEED
         self.inventory = [Hoe(), Axe()]
         self.current_item = 0
+        self.player_index = 0
+        self.player_walk_images = [
+            pygame.image.load('Graphics/player_walk_1.png').convert_alpha(),
+            pygame.image.load('Graphics/player_walk_2.png').convert_alpha()
+        ]
+        self.animation_speed = 0.1
+        self.is_moving = False
 
     def gettool(self):
         return self.inventory[self.current_item]
@@ -29,16 +37,27 @@ class Player(pygame.sprite.Sprite):
 
     def getInput(self):
         keys = pygame.key.get_pressed()
+        self.is_moving = False  # Reset movement flag
+        
         if keys[pygame.K_w]:
             self.movement(0, -self.speed)
+            self.is_moving = True
         if keys[pygame.K_s]:
             self.movement(0, self.speed)
+            self.is_moving = True
         if keys[pygame.K_a]:
+            self.animation()
             self.movement(-self.speed, 0)
+            self.is_moving = True
         if keys[pygame.K_d]:
+            self.animation()
             self.movement(self.speed, 0)
-        if keys[pygame.K_SPACE]:  # Use espaço ou outra tecla para alternar entre ferramentas
+            self.is_moving = True
+        if keys[pygame.K_SPACE]:
             self.current_item = (self.current_item + 1) % len(self.inventory)
+        
+        if not self.is_moving:
+            self.image = self.standing_image
 
     def movement(self, dx, dy):
         self.rect.x += dx
@@ -57,6 +76,12 @@ class Player(pygame.sprite.Sprite):
         offset_y = max(HEIGHT - map_height, offset_y)
 
         return offset_x, offset_y
+
+    def animation(self):
+        self.player_index += self.animation_speed
+        if self.player_index >= len(self.player_walk_images):
+            self.player_index = 0
+        self.image = self.player_walk_images[int(self.player_index)]
 
     def update(self, game):
         self.getInput()
