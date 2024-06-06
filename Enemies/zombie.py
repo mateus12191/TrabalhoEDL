@@ -1,7 +1,6 @@
 import pygame
-
 class Zombie(pygame.sprite.Sprite):
-    def __init__(self, player, x=100, y=100):
+    def __init__(self,player, x=100, y=100):
         super().__init__()
         self.image = pygame.Surface((64, 64))
         self.image.fill((0, 255, 0))  # Zumbi será verde
@@ -15,13 +14,15 @@ class Zombie(pygame.sprite.Sprite):
         # Verifica se o vetor de direção não é zero antes de normalizar
         if direction.length_squared() > 0:
             direction.normalize()
-            speed = 2  # Ajuste a velocidade conforme necessário
+            speed = 1  # Velocidade de movimento do zumbi
             self.rect.move_ip(direction * speed)
         else:
             pass
 
-    def update(self, game):
-        self.movement()
+    def placezombie(self,screen):
+        screen.blit(self.image,self.rect)
+    
 
-    def draw(self, screen, offset):
-        screen.blit(self.image, (self.rect.x + offset[0], self.rect.y + offset[1]))
+    def update(self,game):
+        self.placezombie(game.screen)
+        self.movement()
