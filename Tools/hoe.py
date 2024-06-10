@@ -13,7 +13,7 @@ class Hoe(pygame.sprite.Sprite):
 
         if (abs((game.player.rect.centerx // game.TILESIZE) - tile_x) <= 1 and
             abs((game.player.rect.centery // game.TILESIZE) - tile_y) <= 1):
-            if 0 <= tile_y < len(game.map_data) and 0 <= tile_x < len(game.map_data[0]):
-                if game.map_data[tile_y][tile_x] in [0, 1, 2, 3]:
-                    game.map_data[tile_y][tile_x] = 4
-                    game.map_surface.blit(game.tile_images[4], (tile_x * game.TILESIZE, tile_y * game.TILESIZE))
+            if 0 <= tile_y < len(game.map.map_data) and 0 <= tile_x < len(game.map.map_data[0]):
+                if game.map.map_data[tile_y][tile_x] in [0, 1, 2, 3]:
+                    game.map.map_data[tile_y][tile_x] = 4
+                    game.map.map_surface.blit(game.map.tile_images[4], (tile_x * game.TILESIZE, tile_y * game.TILESIZE))
